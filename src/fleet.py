@@ -78,3 +78,14 @@ class FleetManager:
                     summary[status] += 1
 
         return summary
+    
+
+    #11
+    def sort_vehicles_by_model(self, hub_name):
+        if hub_name not in self.hubs:
+            print(f"Hub '{hub_name}' not found.")
+            return []
+
+        # sorted() with key
+        return sorted(self.hubs[hub_name], key=lambda v: v.model)
+
