@@ -92,20 +92,8 @@ class FleetManager:
         # sorted() with key
         return sorted(self.hubs[hub_name], key=lambda v: v.model)
     
-    # Sort vehicles by battery level (highest first)
-    def sort_by_battery_desc(self, hub_name):
-        if hub_name not in self.hubs:
-            print(f"Hub '{hub_name}' not found.")
-            return []
-
-        return sorted(
-            self.hubs[hub_name],
-            key=lambda v: v.get_battery_percentage(),
-            reverse=True
-        )
     
-    
-    # ---------- UC-13: SAVE TO CSV ----------
+    #13
     def save_to_csv(self, filename):
         folder = os.path.dirname(filename)
         if folder and not os.path.exists(folder):
@@ -146,7 +134,7 @@ class FleetManager:
             reader = csv.DictReader(file)
 
             for row in reader:
-                hub = row["hub_name"]   # ✅ FIXED HERE
+                hub = row["hub_name"]   
 
             if hub not in self.hubs:
                 self.hubs[hub] = []
