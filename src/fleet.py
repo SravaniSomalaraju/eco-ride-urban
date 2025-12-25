@@ -17,6 +17,14 @@ class FleetManager:
         else:
             print(f"Hub '{hub_name}' does not exist.")
 
+        #check duplicates
+        if vehicle in self.hubs[hub_name]:
+            print(f"Duplicate Vehicle ID '{vehicle.vehicle_id}' not allowed.")
+            return
+
+        self.hubs[hub_name].append(vehicle)
+        print(f"Vehicle '{vehicle.vehicle_id}' added to hub '{hub_name}'.")
+
     def display_hubs(self):
         for hub, vehicles in self.hubs.items():
             print(f"Hub: {hub}, Vehicles Count: {len(vehicles)}")
