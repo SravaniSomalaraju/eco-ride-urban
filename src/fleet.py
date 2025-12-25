@@ -1,3 +1,6 @@
+import csv
+import os
+from vehicle import ElectricCar, ElectricScooter
 class FleetManager:
     def __init__(self):
         # Dictionary: Hub Name -> List of Vehicles
@@ -88,4 +91,94 @@ class FleetManager:
 
         # sorted() with key
         return sorted(self.hubs[hub_name], key=lambda v: v.model)
+    
+    # Sort vehicles by battery level (highest first)
+    def sort_by_battery_desc(self, hub_name):
+        if hub_name not in self.hubs:
+            print(f"Hub '{hub_name}' not found.")
+            return []
 
+        return sorted(
+            self.hubs[hub_name],
+            key=lambda v: v.get_battery_percentage(),
+            reverse=True
+        )
+
+    # Sort vehicles by fare price (highest first)
+    def sort_by_fare_desc(self, hub_name, value):
+        if hub_name not in self.hubs:
+            print(f"Hub '{hub_name}' not found.")
+            return []
+
+        return sorted(
+            self.hubs[hub_name],
+            key=lambda v: v.calculate_trip_cost(value),
+            reverse=True
+        )
+    
+    
+    #13
+    def save_to_csv(self, filename):
+        folder = os.path.dirname(filename)
+        if folder and not os.path.exists(folder):
+            os.makedirs(folder)
+
+        with open(filename, "w", newline="") as file:
+            writer = csv.writer(file)
+
+            writer.writerow([
+                "hub_name",
+                "vehicle_id",
+                "model",
+                "battery",
+                "status",
+                "type"
+            ])
+
+            for hub, vehicles in self.hubs.items():
+                for v in vehicles:
+                    writer.writerow([
+                        hub,
+                        v.vehicle_id,
+                        v.model,
+                        v.get_battery_percentage(),
+                        v.get_maintenance_status(),
+                        type(v).__name__
+                    ])
+
+        print("Fleet data saved to CSV successfully.")
+
+    def load_from_csv(self, filename):
+        if not os.path.exists(filename):
+            return  # first run, nothing to load
+
+        self.hubs.clear()
+
+        with open(filename, "r") as file:
+            reader = csv.DictReader(file)
+
+            for row in reader:
+                hub = row["hub_name"]   
+
+            if hub not in self.hubs:
+                self.hubs[hub] = []
+
+                if row["type"] == "ElectricCar":
+                    vehicle = ElectricCar(
+                        row["vehicle_id"],
+                        row["model"],
+                        int(row["battery"]),
+                        5
+                    )
+                else:
+                    vehicle = ElectricScooter(
+                        row["vehicle_id"],
+                        row["model"],
+                        int(row["battery"]),
+                        80
+                    )
+
+                vehicle.set_maintenance_status(row["status"])
+                self.hubs[hub].append(vehicle)
+
+        print("Fleet data loaded from CSV successfully.")
