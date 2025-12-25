@@ -28,3 +28,23 @@ class FleetManager:
     def display_hubs(self):
         for hub, vehicles in self.hubs.items():
             print(f"Hub: {hub}, Vehicles Count: {len(vehicles)}")
+
+    # Search vehicles by hub name
+    def search_by_hub(self, hub_name):
+        if hub_name not in self.hubs:
+            print(f"Hub '{hub_name}' not found.")
+            return []
+
+        return self.hubs[hub_name]
+
+    # Search vehicles with battery > 80%
+    def search_by_battery(self, min_battery=80):
+        result = []
+
+        for vehicles in self.hubs.values():
+            high_battery = list(
+                filter(lambda v: v.get_battery_percentage() > min_battery, vehicles)
+            )
+            result.extend(high_battery)
+
+        return result
