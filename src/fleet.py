@@ -48,3 +48,17 @@ class FleetManager:
             result.extend(high_battery)
 
         return result
+    #group vehicle by type
+    def group_by_vehicle_type(self):
+        grouped = {}
+
+        for vehicles in self.hubs.values():
+            for vehicle in vehicles:
+                vehicle_type = type(vehicle).__name__
+
+                if vehicle_type not in grouped:
+                    grouped[vehicle_type] = []
+
+                grouped[vehicle_type].append(vehicle)
+
+        return grouped
