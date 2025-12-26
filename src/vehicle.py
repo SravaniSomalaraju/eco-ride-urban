@@ -1,0 +1,79 @@
+from abc import ABC, abstractmethod
+
+class Vehicle(ABC):
+    #uc1:vehicle-class
+    def __init__(self, vehicle_id, model, battery_percentage):
+        self.vehicle_id = vehicle_id
+        self.model = model
+        self.battery_percentage = battery_percentage
+
+
+        #uc2:encapsulation
+        self.__maintenance_status = "Available"         
+        self.__rental_price = 0.0
+
+    def set_battery_percentage(self, battery):
+        if battery >= 0 and battery <= 100:
+            self.battery_percentage = battery
+        else:
+            print("Battery percentage must be between 0 and 100")
+
+    def get_battery_percentage(self):
+        return self.battery_percentage
+    
+    def set_maintenance_status(self, status):
+        self.__maintenance_status = status
+
+    def get_maintenance_status(self):
+        return self.__maintenance_status
+
+    def set_rental_price(self, price):
+        if price >= 0:
+            self.__rental_price = price
+        else:
+            print("Rental price cannot be negative")
+
+    def get_rental_price(self):
+        return self.__rental_price
+    #uc7: override
+    def __eq__(self, other):
+        if isinstance(other, Vehicle):
+            return self.vehicle_id == other.vehicle_id
+        return False
+    
+
+    #uc4: abstraction
+    @abstractmethod                           
+    def calculate_trip_cost(self, distance):
+        pass
+
+        #uc11
+    def __str__(self):
+        return (
+            f"[{self.vehicle_id}] {self.model} | "
+            f"Battery: {self.get_battery_percentage()}% | "
+            f"Status: {self.get_maintenance_status()}"
+        )
+    
+
+#uc3:inherit from parent
+class ElectricCar(Vehicle):
+    def __init__(self, vehicle_id, model, battery_percentage, seating_capacity):
+        super().__init__(vehicle_id, model, battery_percentage)
+        self.seating_capacity = seating_capacity
+
+    #uc5: polymorphism
+    def calculate_trip_cost(self, distance):
+        return 5.0 + (0.5 * distance)
+
+
+
+class ElectricScooter(Vehicle):
+    def __init__(self, vehicle_id, model, battery_percentage, max_speed_limit):
+        super().__init__(vehicle_id, model, battery_percentage)
+        self.max_speed_limit = max_speed_limit
+
+    #uc5: polymorphism
+    def calculate_trip_cost(self, minutes):
+        return 1.0 + (0.15 * minutes)
+
