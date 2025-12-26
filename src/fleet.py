@@ -92,7 +92,7 @@ class FleetManager:
         # sorted() with key
         return sorted(self.hubs[hub_name], key=lambda v: v.model)
     
-    # Sort vehicles by battery level (highest first)
+    #uc12: Sort vehicles by battery level (highest first)
     def sort_by_battery_desc(self, hub_name):
         if hub_name not in self.hubs:
             print(f"Hub '{hub_name}' not found.")
@@ -104,7 +104,7 @@ class FleetManager:
             reverse=True
         )
 
-    # Sort vehicles by fare price (highest first)
+    #uc12: Sort vehicles by fare price (highest first)
     def sort_by_fare_desc(self, hub_name, value):
         if hub_name not in self.hubs:
             print(f"Hub '{hub_name}' not found.")
