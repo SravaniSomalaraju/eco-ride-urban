@@ -92,6 +92,18 @@ class FleetManager:
         # sorted() with key
         return sorted(self.hubs[hub_name], key=lambda v: v.model)
     
+    #uc12: Sort vehicles by fare price (highest first)
+    def sort_by_fare_desc(self, hub_name, value):
+        if hub_name not in self.hubs:
+            print(f"Hub '{hub_name}' not found.")
+            return []
+
+        return sorted(
+            self.hubs[hub_name],
+            key=lambda v: v.calculate_trip_cost(value),
+            reverse=True
+        )
+    
     
     #13
     def save_to_csv(self, filename):
