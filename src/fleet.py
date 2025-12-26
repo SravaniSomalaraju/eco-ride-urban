@@ -7,6 +7,7 @@ class FleetManager:
         # Dictionary: Hub Name -> List of Vehicles
         self.hubs = {}
 
+    #uc6: add hub_name
     def add_hub(self, hub_name):
         if hub_name not in self.hubs:
             self.hubs[hub_name] = []
@@ -14,6 +15,7 @@ class FleetManager:
         else:
             print(f"Hub '{hub_name}' already exists.")
 
+    #uc6: add vehicles to hub_name
     def add_vehicle_to_hub(self, hub_name, vehicle):
         if hub_name in self.hubs:
             self.hubs[hub_name].append(vehicle)
@@ -21,19 +23,23 @@ class FleetManager:
         else:
             print(f"Hub '{hub_name}' does not exist.")
 
-        #check duplicates
-        if vehicle in self.hubs[hub_name]:
-            print(f"Duplicate Vehicle ID '{vehicle.vehicle_id}' not allowed.")
+        # UC-7: Duplicate check using list comprehension
+        existing_vehicles = self.hubs[hub_name]
+        if vehicle in existing_vehicles:
+            print(f"Duplicate Vehicle ID '{vehicle.vehicle_id}' not allowed in hub '{hub_name}'.")
             return
 
         self.hubs[hub_name].append(vehicle)
         print(f"Vehicle '{vehicle.vehicle_id}' added to hub '{hub_name}'.")
 
+
+    #uc6: display hub_name and vehicles
     def display_hubs(self):
         for hub, vehicles in self.hubs.items():
             print(f"Hub: {hub}, Vehicles Count: {len(vehicles)}")
 
-    # Search vehicles by hub name
+
+    #uc8: Search vehicles by hub name
     def search_by_hub(self, hub_name):
         if hub_name not in self.hubs:
             print(f"Hub '{hub_name}' not found.")
@@ -41,7 +47,7 @@ class FleetManager:
 
         return self.hubs[hub_name]
 
-    # Search vehicles with battery > 80%
+    #uc8: Search vehicles with battery > 80%
     def search_by_battery(self, min_battery=80):
         result = []
 
@@ -52,7 +58,9 @@ class FleetManager:
             result.extend(high_battery)
 
         return result
-    #group vehicle by type
+    
+
+    #uc9: group vehicle by type
     def group_by_vehicle_type(self):
         grouped = {}
 
@@ -67,7 +75,7 @@ class FleetManager:
 
         return grouped
     
-    # Get count of vehicles by status
+    #uc10: Get count of vehicles by status
     def get_status_summary(self):
         summary = {
             "Available": 0,
@@ -84,7 +92,7 @@ class FleetManager:
         return summary
     
 
-    #11
+    #uc11: alphabetical sort by model
     def sort_vehicles_by_model(self, hub_name):
         if hub_name not in self.hubs:
             print(f"Hub '{hub_name}' not found.")
@@ -93,7 +101,8 @@ class FleetManager:
         # sorted() with key
         return sorted(self.hubs[hub_name], key=lambda v: v.model)
     
-    # Sort vehicles by battery level (highest first)
+    
+    #uc12: Sort vehicles by battery level (highest first)
     def sort_by_battery_desc(self, hub_name):
         if hub_name not in self.hubs:
             print(f"Hub '{hub_name}' not found.")
@@ -105,7 +114,7 @@ class FleetManager:
             reverse=True
         )
 
-    # Sort vehicles by fare price (highest first)
+    #uc12: Sort vehicles by fare price (highest first)
     def sort_by_fare_desc(self, hub_name, value):
         if hub_name not in self.hubs:
             print(f"Hub '{hub_name}' not found.")
@@ -118,12 +127,8 @@ class FleetManager:
         )
     
     
-    #13
+    # ================= UC-13 : CSV =================
     def save_to_csv(self, filename):
-        folder = os.path.dirname(filename)
-        if folder and not os.path.exists(folder):
-            os.makedirs(folder)
-
         with open(filename, "w", newline="") as file:
             writer = csv.writer(file)
 
@@ -151,7 +156,7 @@ class FleetManager:
 
     def load_from_csv(self, filename):
         if not os.path.exists(filename):
-            return  # first run, nothing to load
+            return   # file not present → first run
 
         self.hubs.clear()
 
@@ -159,10 +164,10 @@ class FleetManager:
             reader = csv.DictReader(file)
 
             for row in reader:
-                hub = row["hub_name"]   
+                hub = row["hub_name"]
 
-            if hub not in self.hubs:
-                self.hubs[hub] = []
+                if hub not in self.hubs:
+                    self.hubs[hub] = []
 
                 if row["type"] == "ElectricCar":
                     vehicle = ElectricCar(
@@ -184,13 +189,8 @@ class FleetManager:
 
         print("Fleet data loaded from CSV successfully.")
 
-
-    # ---------- UC-14: SAVE TO JSON ----------
+    # ================= UC-14 : JSON =================
     def save_to_json(self, filename):
-        folder = os.path.dirname(filename)
-        if folder and not os.path.exists(folder):
-            os.makedirs(folder)
-
         data = {}
 
         for hub, vehicles in self.hubs.items():
@@ -209,7 +209,6 @@ class FleetManager:
 
         print("Fleet data saved to JSON successfully.")
 
-    #14
     def load_from_json(self, filename):
         if not os.path.exists(filename):
             return

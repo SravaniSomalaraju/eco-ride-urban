@@ -1,0 +1,18 @@
+{
+    "Downtown": [
+        {
+            "vehicle_id": "C101",
+            "model": "Tesla Model 3",
+            "battery": 85,
+            "status": "Available",
+            "type": "ElectricCar"
+        },
+        {
+            "vehicle_id": "S102",
+            "model": "Ather 450X",
+            "battery": 90,
+            "status": "Available",
+            "type": "ElectricScooter"
+        }
+    ]
+}
