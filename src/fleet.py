@@ -1,4 +1,5 @@
 import csv
+import json
 import os
 from vehicle import ElectricCar, ElectricScooter
 class FleetManager:
@@ -170,3 +171,57 @@ class FleetManager:
                 self.hubs[hub].append(vehicle)
 
         print("Fleet data loaded from CSV successfully.")
+    
+
+    #uc14:save and load to json
+    def save_to_json(self, filename):
+        data = {}
+
+        for hub, vehicles in self.hubs.items():
+            data[hub] = []
+            for v in vehicles:
+                data[hub].append({
+                    "vehicle_id": v.vehicle_id,
+                    "model": v.model,
+                    "battery": v.get_battery_percentage(),
+                    "status": v.get_maintenance_status(),
+                    "type": type(v).__name__
+                })
+
+        with open(filename, "w") as file:
+            json.dump(data, file, indent=4)
+
+        print("Fleet data saved to JSON successfully.")
+
+    def load_from_json(self, filename):
+        if not os.path.exists(filename):
+            return
+
+        self.hubs.clear()
+
+        with open(filename, "r") as file:
+            data = json.load(file)
+
+        for hub, vehicles in data.items():
+            self.hubs[hub] = []
+
+            for v in vehicles:
+                if v["type"] == "ElectricCar":
+                    vehicle = ElectricCar(
+                        v["vehicle_id"],
+                        v["model"],
+                        v["battery"],
+                        5
+                    )
+                else:
+                    vehicle = ElectricScooter(
+                        v["vehicle_id"],
+                        v["model"],
+                        v["battery"],
+                        80
+                    )
+
+                vehicle.set_maintenance_status(v["status"])
+                self.hubs[hub].append(vehicle)
+
+        print("Fleet data loaded from JSON successfully.")
