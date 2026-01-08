@@ -1,0 +1,3 @@
+hub_name,vehicle_id,model,battery,status,type
+Downtown,C101,Tesla Model 3,85,Available,ElectricCar
+Downtown,S102,Ather 450X,90,Available,ElectricScooter
